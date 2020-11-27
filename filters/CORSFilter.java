@@ -10,6 +10,9 @@ import javax.servlet.ServletResponse;
 //import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import services.IgdbCalls;
+import services.RawgioCalls;
  
 /**
  * Servlet Filter implementation class CORSFilter
@@ -62,7 +65,11 @@ public class CORSFilter implements Filter {
      * @see Filter#init(FilterConfig)
      */
     public void init(FilterConfig fConfig) throws ServletException {
-        // TODO Auto-generated method stub
+    	//String[] creds = {"IGDB_CLIENTID","IGDB_AUTHORIZATION"};
+    	String[] creds = {System.getenv("IGDB_CLIENTID"),System.getenv("IGDB_AUTHORIZATION"),
+    					  System.getenv("RAWG_TOKEN"),System.getenv("RAWG_USERAGENT")};
+    	IgdbCalls.setCredentials(creds);
+    	RawgioCalls.setCredentials(creds);
     }
  
 }

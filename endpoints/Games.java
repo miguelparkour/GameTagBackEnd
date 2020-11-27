@@ -10,6 +10,8 @@ import javax.ws.rs.core.MediaType;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
+import controllers.Home;
+
 @Path("games")
 public class Games {
 	@Path("/getTags")
@@ -17,7 +19,7 @@ public class Games {
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getTags() {
 		System.out.println("/getTags call");
-		return "";
+		return Home.getTags();
 	}
 
 	@Path("/getGames")
@@ -25,9 +27,8 @@ public class Games {
 	@Consumes(MediaType.TEXT_PLAIN)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getGames(String body) {
-		System.out.println("llamada a getgames");
-		JsonObject obj = (JsonObject) new Gson().fromJson(body, JsonObject.class);
-		return "";
+		System.out.println("/getGames call");
+		return Home.getGames(body);
 	}
 	
 
