@@ -3,18 +3,17 @@ package utils;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import connection.SteamDB;
 import models.Game;
 import models.Media;
 import models.Tag;
@@ -67,11 +66,11 @@ public class IgdbData {
 		
 		// List<String> properties
 		game.setEngines((List<String>) JsonData.getProperty(obj,"game_engines","name"));
-		game.setModes((List<String>) JsonData.getProperty(obj,"game_modes","name"));
+		game.setGame_modes((List<String>) JsonData.getProperty(obj,"game_modes","name"));
 		game.setGenres((List<String>) JsonData.getProperty(obj,"genres","name"));
-		game.setCompanies((List<String>) JsonData.getProperty(obj,"involved_companies","company","name"));
+		game.setInvolved_companies((List<String>) JsonData.getProperty(obj,"involved_companies","company","name"));
 		game.setPlatforms((List<String>) JsonData.getProperty(obj,"platforms","name"));
-		game.setPerspectives((List<String>) JsonData.getProperty(obj,"player_perspectives","name"));
+		game.setPlayer_perspectives((List<String>) JsonData.getProperty(obj,"player_perspectives","name"));
 		game.setThemes((List<String>) JsonData.getProperty(obj,"themes","name"));
 		media.setImages((List<String>) JsonData.getProperty(obj,"screenshots","url"));
 		
@@ -89,6 +88,12 @@ public class IgdbData {
 				for (int i = 0 ; i < keys.size(); i++) {
 					int pos = Integer.parseInt(keys.get(i))-1;
 					game.addLinkItem(labels[pos], urls.get(i));
+					
+					// chequeamos si el game está en SteamDB
+					if(keys.get(i).equals("13")) {
+						String steamAppId = urls.get(i).split("app/")[1];
+						media = SteamDB.fillMedia(media, steamAppId);
+					}
 				}
 			}
 		}
@@ -104,15 +109,25 @@ public class IgdbData {
 	private List<Tag> getTags (Game game){
 		List<Tag> result = new ArrayList<Tag>();
 		
-		Map<String, List<String>> map = game.propertiesSercheables();
+		// tags que son que se guardan en List<String>
+		Map<String, List<String>> map = game.listPropertiesSercheables();
 		for (Entry<String, List<String>> entry : map.entrySet()) {
 			List<String> values =  entry.getValue();
-			List<String> ids = (List<String>) JsonData.getProperty(obj, entry.getKey(),"id");
+			String key = entry.getKey();
+			List<String> ids = (List<String>) JsonData.getProperty(obj, key,"id");
 			if(ids.size() == values.size()) {
 				for (int i = 0; i < ids.size(); i++) {
-					result.add(new Tag(ids.get(i),values.get(i),entry.getKey()));
+					result.add(new Tag(ids.get(i),values.get(i),key));
 				}
 			}
+		}
+		
+		// tags que se guardan como Strings
+		Map<String, String> map2 = game.stringPropertiesSercheables();
+		for (Entry<String, String> entry : map2.entrySet()) {
+			String value =  entry.getValue();
+			String ids = (String) JsonData.getProperty(obj, entry.getKey(),"id");
+			result.add(new Tag(ids,value,entry.getKey()));
 		}
 		
 		return result;

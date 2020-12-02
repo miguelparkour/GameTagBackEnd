@@ -7,8 +7,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.client.Entity;
 
 public class IgdbCalls {
-	private static String CLIENT_ID;
-	private static String AUTHORIZATION;
+	private static String CLIENT_ID = "zyj5klkuupff579o6zg6hfouy7t6pt";
+	private static String AUTHORIZATION = "Bearer r9x8tlowsus41p2xqap0bzhldm3d18";
 	private static final String API_URL = "https://api.igdb.com/v4/games";
 	private Client client;
 	private WebTarget target;

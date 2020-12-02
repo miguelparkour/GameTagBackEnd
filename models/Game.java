@@ -9,20 +9,20 @@ import java.util.Map;
 public class Game {
 	private String _id;	//empty (fill with mongoDb)
 	private String name;					
-	private String slug;					
-	private String collection;					
+	private String slug;			
 	private String franchise;
 	private String storyline;
 	private String description;			
 	private LocalDate release;
 
-	// ------- searcheables props
-	private List<String> engines;
-	private List<String> modes;
+	// ------- searcheables props				
+	private String collection;	
+	private List<String> game_engines;
+	private List<String> game_modes;
 	private List<String> genres;
-	private List<String> companies;
+	private List<String> involved_companies;
 	private List<String> platforms;
-	private List<String> perspectives;
+	private List<String> player_perspectives;
 	private List<String> themes;
 	// ------- searcheables props
 	
@@ -43,15 +43,21 @@ public class Game {
 		if(this.release == null) result.add("release");
 		return result;
 	}
-	public Map<String, List<String>> propertiesSercheables(){
+	public Map<String, List<String>> listPropertiesSercheables(){
 		Map<String, List<String>> result = new HashMap<String, List<String>>();
-		if(this.engines != null) result.put("game_engines",this.getEngines());
-		if(this.modes != null) result.put("game_modes",this.getModes());
+		if(this.game_engines != null) result.put("game_engines",this.getEngines());
+		if(this.game_modes != null) result.put("game_modes",this.getGame_modes());
 		if(this.genres != null) result.put("genres",this.getGenres());
-		if(this.companies != null) result.put("involved_companies",this.getCompanies());
+		//if(this.involved_companies != null) result.put("involved_companies",this.getInvolved_companies());
 		if(this.platforms != null) result.put("platforms",this.getPlatforms());
-		if(this.perspectives != null) result.put("player_perspectives",this.getPerspectives());
+		if(this.player_perspectives != null) result.put("player_perspectives",this.getPlayer_perspectives());
 		if(this.themes != null) result.put("themes",this.getThemes());
+		return result;
+	}
+	public Map<String, String> stringPropertiesSercheables(){
+		Map<String, String> result = new HashMap<String, String>();
+		if(this.collection != null) result.put("collection",this.getCollection());
+//		if(this.franchise != null) result.put("franchise",this.getFranchise());
 		return result;
 	}
 	
@@ -87,10 +93,6 @@ public class Game {
 		}
 		public void setUrl(String url) {
 			this.url = url;
-		}
-		@Override
-		public String toString() {
-			return "Link [\n\tname=" + name + "\n\turl=" + url + "]";
 		}	
 	}
 	class Rating{
@@ -113,10 +115,6 @@ public class Game {
 		}
 		public void setValue(int value) {
 			this.value = value;
-		}
-		@Override
-		public String toString() {
-			return "Rating [\n\tname=" + name + "\n\tvalue=" + value + "]";
 		}
 	}
 	
@@ -174,16 +172,10 @@ public class Game {
 		this.release = release;
 	}
 	public List<String> getEngines() {
-		return engines;
+		return game_engines;
 	}
 	public void setEngines(List<String> engines) {
-		this.engines = engines;
-	}
-	public List<String> getModes() {
-		return modes;
-	}
-	public void setModes(List<String> modes) {
-		this.modes = modes;
+		this.game_engines = engines;
 	}
 	public List<String> getGenres() {
 		return genres;
@@ -191,26 +183,32 @@ public class Game {
 	public void setGenres(List<String> genres) {
 		this.genres = genres;
 	}
-	public List<String> getCompanies() {
-		return companies;
-	}
-	public void setCompanies(List<String> companies) {
-		this.companies = companies;
-	}
 	public List<String> getPlatforms() {
 		return platforms;
 	}
 	public void setPlatforms(List<String> platforms) {
 		this.platforms = platforms;
 	}
-	public List<String> getPerspectives() {
-		return perspectives;
-	}
-	public void setPerspectives(List<String> perspectives) {
-		this.perspectives = perspectives;
-	}
 	public List<String> getThemes() {
 		return themes;
+	}
+	public List<String> getGame_modes() {
+		return game_modes;
+	}
+	public void setGame_modes(List<String> game_modes) {
+		this.game_modes = game_modes;
+	}
+	public List<String> getInvolved_companies() {
+		return involved_companies;
+	}
+	public void setInvolved_companies(List<String> involved_companies) {
+		this.involved_companies = involved_companies;
+	}
+	public List<String> getPlayer_perspectives() {
+		return player_perspectives;
+	}
+	public void setPlayer_perspectives(List<String> player_perspectives) {
+		this.player_perspectives = player_perspectives;
 	}
 	public void setThemes(List<String> themes) {
 		this.themes = themes;
@@ -241,13 +239,5 @@ public class Game {
 		if(this.links == null) this.links = new ArrayList<Game.Link>();
 		if(url == null || url.equals("")) return false;
 		return this.links.add(new Link(label, url));
-	}
-	@Override
-	public String toString() {
-		return "Game [\n\t_id=" + _id + "\n\tname=" + name + "\n\tslug=" + slug + "\n\tcollection=" + collection
-				+ "\n\tfranchise=" + franchise + "\n\tstoryline=" + storyline + "\n\tdescription=" + description
-				+ "\n\trelease=" + release + "\n\tengines=" + engines + "\n\tmodes=" + modes + "\n\tgenres=" + genres
-				+ "\n\tcompanies=" + companies + "\n\tplatforms=" + platforms + "\n\tperspectives=" + perspectives
-				+ "\n\tthemes=" + themes + "\n\tratings=" + ratings + "\n\tlinks=" + links + "\n\tmedia=" + media + "]";
 	}
 }

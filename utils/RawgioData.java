@@ -12,7 +12,7 @@ public class RawgioData {
 	
 	public static Game init(String json, Game game) {
 		
-		if (json == null ) {
+		if (json != null ) {
 			JsonObject obj = new Gson().fromJson(json, JsonObject.class);
 			System.out.println("Juego relleno");
 			return chargeInfo(obj, game);
@@ -60,8 +60,8 @@ public class RawgioData {
 		List<String> temp = game.emptyPropertiesName();
 		for (String property : temp) {
 			if (property.equals("name")) game.setName((String) JsonData.getProperty(obj, "name"));
-			if (property.equals("storyline")) game.setName((String) JsonData.getProperty(obj, "description_raw"));
-			if (property.equals("description")) game.setName((String) JsonData.getProperty(obj, "description_raw"));
+			if (property.equals("storyline")) game.setStoryline((String) JsonData.getProperty(obj, "description_raw"));
+			if (property.equals("description")) game.setDescription((String) JsonData.getProperty(obj, "description_raw"));
 			if (property.equals("release")) {
 				String release = (String) JsonData.getProperty(obj, "released");
 				if(release != null) {

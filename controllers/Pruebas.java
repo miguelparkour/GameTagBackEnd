@@ -4,25 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import connection.GamesDB;
+import connection.TagsDB;
 import models.Game;
-import models.Tag;
+import services.IgdbCalls;
+import services.RawgioCalls;
+import utils.IgdbData;
+import utils.RawgioData;
 
 public class Pruebas {
-	public static void amain(String[] args) {
-		List<Tag> tags = new ArrayList<Tag>();
-		tags.add(new Tag("1","Shooter","genres"));
-//		tags.add(new Tag("1","PC (Microsoft Windows)","platforms"));
-//		tags.add(new Tag("1","Single player","modes"));
-		List<Game> games = GamesDB.getGames(tags);
-		for (Game game : games) {
-			System.out.println(game.getSlug());
+	public static void main(String[] args) {		
+		String fields = "fields alternative_names.name,collection.name,cover.url,first_release_date,franchise.name,game_engines.name,game_modes.name,genres.name,involved_companies.company.name,name,platforms.name,player_perspectives.name,rating,screenshots.url,slug,storyline,summary,themes.name,url,websites.url,websites.category;";
+		String body = fields + "limit 1;where alternative_names!=null&collection!=null&cover!=null&franchise!=null&game_engines!=null&involved_companies!=null&name!=null&platforms!=null;";
+		String json = new IgdbCalls().getGames(body);
+		System.out.println(json);
+		IgdbData igdb = new IgdbData(json);
+		RawgioCalls r = new RawgioCalls();
+		List<Game> games = new ArrayList<Game>();
+		for(Game game : igdb.games) {
+			String rawgjson = r.getGame(game.getSlug());
+			games.add(RawgioData.init(rawgjson, game));
 		}
-	}
-	public static void main(String[] args) {
-//		{"tags":[{"_id":"testID1","type":"typeTest","name":"fakename"},{"_id":"testID2","type":"typeTest2","name":"fakename2"}]}
-		String response = "{\"tags\":[{\"_id\":\"testID1\",\"type\":\"typeTest\",\"name\":\"fakename\"},{\"_id\":\"testID2\",\"type\":\"typeTest2\",\"name\":\"fakename2\"}]}";
-		Home.getGames(response);
-	
+		GamesDB.setGames(games);
+		TagsDB.setTags(igdb.tags);
 	}
 }
 

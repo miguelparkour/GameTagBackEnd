@@ -14,12 +14,12 @@ import controllers.Home;
 
 @Path("games")
 public class Games {
-	@Path("/getTags")
+	@Path("/firstCall")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getTags() {
-		System.out.println("/getTags call");
-		return Home.getTags();
+	public String firstCall() {
+		System.out.println("/getTags firstCall");
+		return Home.firstCall();
 	}
 
 	@Path("/getGames")
@@ -32,12 +32,11 @@ public class Games {
 	}
 	
 
-	@Path("/getGameById")
+	@Path("/getGame")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getGameById(@QueryParam("id") String id) {
-		System.out.println("llamada a getgamebyid");
-		System.out.println("id: "+id);
-		return "";
+	public String getGameBySlug(@QueryParam("slug") String slug) {
+		System.out.println("llamada a getgamebyslug");
+		return Home.getGame(slug);
 	}
 }

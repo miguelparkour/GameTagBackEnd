@@ -20,6 +20,7 @@ public class GamesDB {
 		List<Document> docs = new ArrayList<Document>();
 		for (Game game : games) {
 			if (!existInMongo(game)) {
+				System.out.println("añadiendo  la base de datos: "+game.getSlug());
 				docs.add(Utils.toDocument(game));
 			}
 		}
@@ -36,22 +37,27 @@ public class GamesDB {
 
 	public static List<Game> getGames(List<Tag> tags) {
 		List<Game> games = new ArrayList<Game>();
-		
+		FindIterable<Document> docs;
 		// lista de tags a un filtro
-		List<Bson> bsonList = new ArrayList<Bson>();
-		for(Tag tag : tags) {
-			String field = tag.getType();
-			String name = tag.getName().replace("(", "\\(").replace(")", "\\)");
-			System.out.println("field: "+field+"   name: "+name);
-			bsonList.add(regex(field,name,"i"));
+		if(tags != null && !tags.isEmpty()) {
+			List<Bson> bsonList = new ArrayList<Bson>();
+			for(Tag tag : tags) {
+				String field = tag.getType();
+				String name = tag.getName().replace("(", "\\(").replace(")", "\\)");
+				System.out.println("field: "+field+"   name: "+name);
+				bsonList.add(regex(field,name,"i"));
+			}
+			int tam = tags.size();
+			Bson[] reg = new Bson[tam];
+			reg = bsonList.toArray(reg);
+			Bson filter = and(reg);
+			
+			// Database Conexion
+			docs = MongoClients.create().getDatabase("base").getCollection("games").find(filter).limit(12);
+		}else {
+			// Database Conexion
+			docs = MongoClients.create().getDatabase("base").getCollection("games").find().limit(12);
 		}
-		int tam = tags.size();
-		Bson[] reg = new Bson[tam];
-		reg = bsonList.toArray(reg);
-		Bson filter = and(reg);
-		
-		// Database Conexion
-		FindIterable<Document> docs = MongoClients.create().getDatabase("base").getCollection("games").find(filter).limit(10);
 		for (Document document : docs) {
 			document.remove("_id");
 			String a = document.toJson();
@@ -61,4 +67,20 @@ public class GamesDB {
 		
 		return games;
 	}
+
+	public static Game getGame(String slug) {
+		Game game = null;
+		Bson filter = eq("slug",slug);
+		Document doc = MongoClients.create()
+									.getDatabase("base")
+									.getCollection("games")
+									.find(filter).first();
+		if(doc != null) {
+			game = Utils.documentToGame(doc);
+		}else {
+			System.out.println("Este gueim no existe manin!");
+		}
+		return game;
+	}
+
 }
