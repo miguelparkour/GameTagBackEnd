@@ -90,7 +90,7 @@ public class IgdbData {
 					game.addLinkItem(labels[pos], urls.get(i));
 					
 					// chequeamos si el game está en SteamDB
-					if(keys.get(i).equals("13")) {
+					if(keys.get(i).equals("13") && urls.get(i).contains("app/")) {
 						String steamAppId = urls.get(i).split("app/")[1];
 						media = SteamDB.fillMedia(media, steamAppId);
 					}

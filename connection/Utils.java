@@ -13,7 +13,6 @@ public class Utils {
 		return gson.fromJson(json, clase);
 	}
 	public static Game documentToGame(Document doc) {
-		Game game = new Game();
 		Gson gson = new Gson();
 		doc.remove("_id");
 		String json = gson.toJson(doc);

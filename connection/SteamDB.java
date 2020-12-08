@@ -2,9 +2,7 @@ package connection;
 
 import static com.mongodb.client.model.Filters.eq;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -13,7 +11,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.mongodb.client.MongoClients;
 
 import models.Media;
 
@@ -24,12 +21,12 @@ public class SteamDB {
 		System.out.println("SteamID: "+steamId);
 		steamId = steamId.split("/")[0];
 		
-		if(steamId.equalsIgnoreCase("12120")) {
-			System.out.println("Soy el san andreas");
+		if(steamId.equalsIgnoreCase("292030")) {
+			System.out.println("Soy el sthe witcher3");
 		}
 		
 		Bson filter = eq("steam_appid",Integer.parseInt(steamId));
-		Document doc = MongoClients.create().getDatabase("steam").getCollection("steam_media_data").find(filter).first();
+		Document doc = MongoConnection.getMongoClient().getDatabase("steam").getCollection("steam_media_data").find(filter).first();
 		
 		if(doc != null) {
 			Gson gson = new Gson();

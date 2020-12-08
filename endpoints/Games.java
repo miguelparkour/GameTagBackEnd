@@ -14,6 +14,8 @@ import controllers.Home;
 
 @Path("games")
 public class Games {
+	public static int conections = 0;
+	
 	@Path("/firstCall")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

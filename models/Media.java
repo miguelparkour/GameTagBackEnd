@@ -1,5 +1,6 @@
 package models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Media {
@@ -15,15 +16,19 @@ public class Media {
 	private List<String> movies;
 
 	public boolean addImage(String image) {
+		if(this.images == null) this.images = new ArrayList<String>();
 		return this.images.add(image);
 	}
 	public boolean addImages(List<String> images) {
+		if(this.images == null) this.images = new ArrayList<String>();
 		return this.images.addAll(images);
 	}
 	public boolean addMovie(String movie) {
+		if(this.movies == null) this.movies = new ArrayList<String>();
 		return this.movies.add(movie);
 	}
 	public boolean addMovies(List<String> movies) {
+		if(this.movies == null) this.movies = new ArrayList<String>();
 		return this.movies.addAll(movies);
 	}
 	public Media() {

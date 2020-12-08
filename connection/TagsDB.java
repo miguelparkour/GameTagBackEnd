@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCursor;
+
 import static com.mongodb.client.model.Filters.eq;
 
 import models.Tag;
@@ -23,10 +23,12 @@ public class TagsDB {
 			}
 		}
 		if(docs.size() > 0) {
-			MongoClients.create()
+			MongoConnection.getMongoClient()
 						.getDatabase("base")
 						.getCollection("tags")
 						.insertMany(docs);
+			
+			System.out.println("insertando Tags");
 		}
 	}
 	
@@ -37,11 +39,13 @@ public class TagsDB {
 		List<Tag> tags = new ArrayList<Tag>();
 
 		// Database Conexion
-		MongoCursor<Document> mongoTags = MongoClients.create()
+		MongoCursor<Document> mongoTags = MongoConnection.getMongoClient()
 												.getDatabase("base")
 												.getCollection("tags")
 												.find()
 												.iterator();
+		
+		System.out.println("obteniendo tags");
 		while (mongoTags.hasNext()) {
 			Document document = (Document) mongoTags.next();
 			Tag tag = (Tag) Utils.documentTo(document,Tag.class);
@@ -54,15 +58,17 @@ public class TagsDB {
 	// Only for Testing uses
 	public static void getSpecificTag() {
 		Bson filter = eq("_id","themes:1");
-		Document doc = MongoClients.create()
+		Document doc = MongoConnection.getMongoClient()
 									.getDatabase("base")
 									.getCollection("tags")
 									.find(filter).first();
+		
+		System.out.println("este no deería salir");
 		if(doc != null) {
 			Tag tag = (Tag) Utils.documentTo(doc, Tag.class);
 			System.out.println(tag.toString());
 		}else {
-			System.out.println("Ese tag no estág en la base de datos, lo pillas?");
+			System.out.println("Ese tag no estág en la base de datos");
 		}
 	}
 }
